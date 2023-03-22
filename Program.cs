@@ -193,7 +193,7 @@ namespace RunOutOfLevelFun
                         "",
                         ">Enter Door 1 (1)",
                         ">Enter Door 2 (2)"
-                    }, new int[] { 1, 1, 0, 0, 0 });
+                    }, new int[] { 1, 1, 0, 0, 0 }, ConsoleKey.D1);
                 }
                 else
                 {
