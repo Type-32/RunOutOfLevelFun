@@ -8,10 +8,37 @@ namespace RunOutOfLevelFun.Informatics
         public static string SavesPath { get { return Path.Combine(GameConfigPath, "saves"); } }
         public static string ProgressionPath { get { return Path.Combine(SavesPath, "player.progress"); } }
     }
+    public static class ProbabilityControl
+    {
+        public static int GenerateProbability(int[] weight)
+        {
+            int tot = 0, setLev = 0;
+            Random prob = new Random();
+            if (weight.Length > 1)
+            {
+                for (int i = 0; i < weight.Length; i++) tot += weight[i];
+                setLev = prob.Next(0, tot);
+                for (int i = 0; i < weight.Length - 1; i++)
+                {
+                    if (i == 0)
+                        if (setLev >= 0 && setLev < weight[i]) return 1;
+                        else
+                        if (setLev >= weight[i] && setLev < weight[i]) return i + 1;
+                }
+            }
+            else
+            {
+                setLev = prob.Next(0, 100);
+                if (setLev <= weight[0]) return 1;
+            }
+            return 0;
+        }
+    }
 }
 namespace RunOutOfLevelFun
 {
     using System.Threading.Tasks;
+    using RunOutOfLevelFun.Informatics;
     static class MenuUtils
     {
         public static async Task Loading(int sec, string loadingMessage = "Buffering...", bool clearConsole = true)
@@ -116,6 +143,7 @@ namespace RunOutOfLevelFun
             }
             while (true)
             {
+                //In-Game Intro Section
                 Console.Clear();
                 await MenuUtils.PrintManipulationContent(new string[]{
                     "You've noclipped into The Backrooms.",
@@ -132,6 +160,45 @@ namespace RunOutOfLevelFun
                     "",
                     ">Follow... (Any Key)"
                 }, new int[] { 1, 0, 0 });
+
+                //First Decision
+                ConsoleKey? k = new();
+                while (k != ConsoleKey.Y)
+                {
+                    k = await MenuUtils.PrintManipulationContent(new string[]{
+                        "You Found a Door.",
+                        "The Door says \"Fun\" on it.",
+                        "Do you want to enter?",
+                        "",
+                        ">Yes (Y)",
+                        ">Come On In :) (N)",
+                        ">Why Would You Not Come In? (:D)"
+                    }, new int[] { 1, 1, 1, 0, 1, 1, 1 }, ConsoleKey.Y);
+                }
+                int dec = ProbabilityControl.GenerateProbability(new int[] { 50, 80, 10 });
+                if (dec == 1)
+                {
+                    await MenuUtils.PrintManipulationContent(new string[]{
+                        "You Entered the Door.",
+                        "There is another door behind the one you've entered.",
+                        "",
+                        ">Enter... (Any Key)"
+                    }, new int[] { 1, 0, 0 });
+                }
+                else if (dec == 2)
+                {
+                    await MenuUtils.PrintManipulationContent(new string[]{
+                        "You Entered the Door.",
+                        "Behind the door are two doors presented in front of you.",
+                        "",
+                        ">Enter Door 1 (1)",
+                        ">Enter Door 2 (2)"
+                    }, new int[] { 1, 1, 0, 0, 0 });
+                }
+                else
+                {
+
+                }
                 break;
             }
         }
