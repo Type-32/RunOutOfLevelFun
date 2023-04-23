@@ -187,7 +187,7 @@ namespace RunOutOfLevelFun
                 }
                 else if (dec == 2)
                 {
-                    await MenuUtils.PrintManipulationContent(new string[]{
+                    ConsoleKey? k2 = await MenuUtils.PrintManipulationContent(new string[]{
                         "You Entered the Door.",
                         "Behind the door are two doors presented in front of you.",
                         "",
