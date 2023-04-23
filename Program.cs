@@ -183,7 +183,7 @@ namespace RunOutOfLevelFun
                         "There is another door behind the one you've entered.",
                         "",
                         ">Enter... (Any Key)"
-                    }, new int[] { 1, 0, 0 });
+                    }, new int[] { 1, 0, 0 ,1 });
                 }
                 else if (dec == 2)
                 {
